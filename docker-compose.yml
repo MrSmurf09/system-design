@@ -1,0 +1,20 @@
+services:
+  system_design:
+    container_name: system_design
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    command: ${APP_COMMAND:-pnpm run dev}
+    ports:
+      - 6001:6001
+    volumes:
+      - ./src:/app
+      - /app/node_modules
+      - ../../../packages/shared-types:/packages/shared-types
+    networks:
+      - mf_network
+
+networks:
+  mf_network:
+    external: true

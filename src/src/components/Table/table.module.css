@@ -1,0 +1,23 @@
+.tablePaper {
+    width: 100%;
+    border: 1px solid #eef2f6;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.tableHeader {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f1f4f9;
+}
+
+.searchField {
+    width: 250px;
+}
+
+.tableContainer {
+    max-height: 500px;
+}

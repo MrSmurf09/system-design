@@ -1,0 +1,14 @@
+services:
+  system_design:
+    container_name: system_design
+    build:
+      context: ../../../
+      dockerfile: microfrontends/apps/system-design/Dockerfile
+    ports:
+      - "6001:80"                  
+    networks:
+      - mf_network
+
+networks:
+  mf_network:
+    external: true
