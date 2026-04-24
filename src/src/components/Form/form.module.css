@@ -1,17 +1,17 @@
-.form_container {
+div.form_container {
     border-radius: 12px;
     overflow: hidden;
     background-color: #fff;
 }
 
-.padding_container {
+div.form_container div.padding_container {
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-.title_container {
+div.form_container div.padding_container div.title_container {
     display: flex;
     justify-content: center;
     width: 100%;
@@ -28,7 +28,13 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 32px;
+    width: 100%;
+}
+
+.footer_container>button,
+.footer_container>div {
+    flex-grow: 0;
 }
 
 .skeleton_title {

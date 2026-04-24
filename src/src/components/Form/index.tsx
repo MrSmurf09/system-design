@@ -21,12 +21,19 @@ export const Form: FC<PropsWithChildren<FormComponentProps>> = ({
 
   const footerChildren = childrenArray.filter((child) => {
     if (!React.isValidElement(child)) return false;
+
+    const props = child.props as {
+      type?: string;
+      className?: string;
+      label?: string;
+    };
     const isButton =
-      typeof child.type !== "string" &&
-      (child.type as { name?: string }).name === "Button";
-    const isContainer = (
-      child.props as { className?: string }
-    )?.className?.includes("buttonContainer");
+      (typeof child.type !== "string" &&
+        (child.type as { name?: string }).name === "Button") ||
+      props.type === "submit";
+
+    const isContainer = props.className?.includes("buttonContainer");
+
     return isButton || isContainer;
   });
 
