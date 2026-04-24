@@ -19,13 +19,14 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import type { TableProps } from "@bengali/shared-types";
-import React, { type ChangeEvent, useState } from "react";
+import React, { type ChangeEvent, useEffect, useState } from "react";
 import styles from "./Table.module.css";
+import type { TableProps } from "@bengali/shared-types";
+import { EmptyState } from "src/components/EmptyState";
 
 type SortOrder = "asc" | "desc" | null;
 
-export const Table = <T extends { id: string | number }>({
+export const Table = <RowData extends { id: string | number }>({
   columns,
   data,
   loading = false,
@@ -36,21 +37,34 @@ export const Table = <T extends { id: string | number }>({
   onPageChange,
   onRowsPerPageChange,
   onSearch,
-}: TableProps<T>) => {
-  const muiPage = page - 1;
+}: TableProps<RowData>) => {
+  const safePage = Math.max(1, page);
+  const muiPage = safePage - 1;
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<SortOrder>(null);
+  const [showSkeleton, setShowSkeleton] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!loading) {
+      setShowSkeleton(false);
+      return;
+    }
+
+    // Evita parpadeo del skeleton en cargas cortas.
+    const timer = setTimeout(() => setShowSkeleton(true), 180);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   return (
     <StyledEngineProvider injectFirst>
-      <Paper elevation={0} className={styles.tablePaper}>
-        <Box className={styles.tableHeader}>
+      <Paper elevation={0} className={styles.table_paper}>
+        <Box className={styles.table_header}>
           <Typography variant="subtitle1">Listado de Registros</Typography>
           <TextField
             size="small"
             placeholder="Buscar..."
             value={searchTerm}
-            className={styles.searchField}
+            className={styles.search_field}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setSearchTerm(e.target.value);
               onSearch?.(e.target.value);
@@ -86,19 +100,12 @@ export const Table = <T extends { id: string | number }>({
               <TableRow>
                 {columns.map((column) => (
                   <TableCell
-                    key={String(column.key)}
-                    sx={{
-                      backgroundColor: "#f8fafc",
-                      color: "#475569",
-                      fontWeight: 600,
-                      fontSize: "0.75rem",
-                      textTransform: "uppercase",
-                      borderBottom: "2px solid #f1f4f9",
-                    }}
+                    key={`head-${String(column.key)}`}
+                    className={styles.header_cell}
                   >
-                    <Box>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
                       {column.header}
-                      {column.filter && (
+                      {column.key === "fecha" && (
                         <Tooltip
                           title={
                             sortDirection === "asc" ? "Recientes" : "Antiguos"
@@ -111,19 +118,11 @@ export const Table = <T extends { id: string | number }>({
                                 sortDirection === "asc" ? "desc" : "asc",
                               )
                             }
-                            sx={{
-                              ml: 0.5,
-                              color: sortDirection ? "primary.main" : "inherit",
-                            }}
+                            className={`${styles.sort_button} ${sortDirection ? styles.sort_button_active : ""}`}
                           >
                             <SortIcon
                               fontSize="small"
-                              sx={{
-                                transform:
-                                  sortDirection === "desc"
-                                    ? "rotate(180deg)"
-                                    : "none",
-                              }}
+                              className={`${styles.sort_icon} ${sortDirection === "desc" ? styles.sort_icon_desc : ""}`}
                             />
                           </IconButton>
                         </Tooltip>
@@ -134,51 +133,44 @@ export const Table = <T extends { id: string | number }>({
               </TableRow>
             </TableHead>
             <TableBody>
-              {loading ? (
-                Array.from({ length: rowsPerPage }).map((_, i) => {
-                  const rowId = `loading-row-${i}`;
-                  return (
-                    <TableRow key={rowId}>
-                      {columns.map((column) => (
-                        <TableCell
-                          key={`${rowId}-${String(column.key)}`}
-                          sx={{ padding: "16px" }}
-                        >
-                          <Skeleton
-                            variant="text"
-                            height={20}
-                            animation="wave"
-                          />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  );
-                })
-              ) : data.length === 0 ? (
+              {loading || showSkeleton ? (
+                Array.from({ length: rowsPerPage }).map((_, rowIndex) => (
+                  <TableRow key={`loading-row-${rowIndex}`}>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={`loading-cell-${rowIndex}-${String(column.key)}`}
+                        className={styles.loading_cell}
+                      >
+                        <Skeleton variant="text" height={20} animation="wave" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : !loading && data.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={columns.length} align="center">
-                    <Box>{emptyMessage}</Box>
+                    <Box className={styles.empty_box}>
+                      <EmptyState
+                        title={emptyMessage}
+                        description="No hay datos para mostrar en este momento."
+                        iconName="empty"
+                      />
+                    </Box>
                   </TableCell>
                 </TableRow>
               ) : (
                 data.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    hover
-                    sx={{ "&:hover": { backgroundColor: "#f1f5f9" } }}
-                  >
+                  <TableRow key={row.id} hover className={styles.data_row}>
                     {columns.map((column) => (
                       <TableCell
                         key={`${row.id}-${String(column.key)}`}
-                        sx={{
-                          padding: "12px 16px",
-                          fontSize: "0.875rem",
-                          color: "#1e293b",
-                        }}
+                        className={styles.data_cell}
                       >
                         {column.render
                           ? (column.render(row) as React.ReactNode)
-                          : (row[column.key as keyof T] as React.ReactNode)}
+                          : (row[
+                              column.key as keyof RowData
+                            ] as React.ReactNode)}
                       </TableCell>
                     ))}
                   </TableRow>

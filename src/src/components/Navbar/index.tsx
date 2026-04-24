@@ -8,54 +8,69 @@ import {
   Typography,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import styles from "./Navbar.module.css";
+import type { NavbarProps } from "@bengali/shared-types";
+import style from "./navbar.module.css";
 
-interface NavbarProps {
-  title?: string;
-  links?: { label: string; href: string }[];
-}
-
-export const Navbar = ({ title = "Brand", links = [] }: NavbarProps) => {
+export const Navbar = ({
+  items = [],
+  logo = "FINANCIA",
+  onLogout,
+  userName,
+}: NavbarProps) => {
   return (
     <StyledEngineProvider injectFirst>
       <AppBar
         position="static"
         elevation={0}
-        className={styles.navbar_container}
-        sx={{
-          backgroundColor: "white",
-          color: "black",
-          borderBottom: "1px solid #e0e0e0",
-        }}
+        className={style.navbar_container}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Typography
               variant="h6"
               component={RouterLink}
               to="/"
-              className={styles.logo}
+              className={style.logo}
             >
-              {title}
+              {logo}
             </Typography>
-            <Box
-              sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
-            >
-              {links.map((link) => (
+
+            <Box className={style.nav_items_group}>
+              {items.map((item) => (
                 <Button
-                  key={link.label}
+                  key={item.label}
                   component={RouterLink}
-                  to={link.href}
-                  className={styles.nav_link}
+                  to={item.path}
+                  className={style.nav_link}
                 >
-                  {link.label}
+                  {item.label}
                 </Button>
               ))}
             </Box>
-            <Box sx={{ flexGrow: 0 }}>
-              <Button variant="contained" color="primary">
-                Login
-              </Button>
+
+            <Box className={style.right_section}>
+              {userName && (
+                <Typography className={style.user_name}>{userName}</Typography>
+              )}
+
+              {onLogout ? (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={onLogout}
+                  className={style.action_button}
+                >
+                  Cerrar Sesión
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={style.action_button}
+                >
+                  Login
+                </Button>
+              )}
             </Box>
           </Toolbar>
         </Container>

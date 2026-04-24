@@ -14,14 +14,20 @@ export const Pagination = ({
   siblingCount = 1,
   disabled = false,
 }: PaginationProps) => {
-  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+  const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     onPageChange(value);
   };
 
   return (
     <StyledEngineProvider injectFirst>
       <div className={styles.container}>
-        <Stack spacing={2}>
+        <Stack
+          sx={{
+            spacing: 2,
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
           <MuiPagination
             count={totalPages}
             page={currentPage}

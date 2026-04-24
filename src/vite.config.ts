@@ -26,6 +26,8 @@ export default defineConfig(() => ({
         "./Dialog": "./src/components/Dialog",
         "./Toast": "./src/components/Toast",
         "./useEventBus": "./src/hooks/useEventBus",
+        "./CustomModal": "./src/components/CustomModal",
+        "./EmptyState": "./src/components/EmptyState",
       },
       shared: {
         react: {

@@ -1,0 +1,22 @@
+.date_picker_input {
+    background-color: #ffffff;
+    width: 100%;
+}
+
+.date_picker_input :global(.MuiOutlinedInput-notchedOutline) {
+    border-radius: 8px;
+}
+
+
+.date_picker_input:global(.Mui-focused) :global(.MuiOutlinedInput-notchedOutline) {
+    border-color: #1976d2;
+    border-width: 2px;
+}
+
+.date_picker_input :global(.MuiInputLabel-root) {
+    font-family: inherit;
+}
+
+.date_picker_input :global(.MuiInputLabel-root.Mui-focused) {
+    color: #1976d2;
+}

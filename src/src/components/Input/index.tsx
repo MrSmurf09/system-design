@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import type { InputProps } from "@bengali/shared-types";
 
-const Input = ({
+export const Input = ({
   name,
   value,
   label,
@@ -14,10 +14,10 @@ const Input = ({
 }: InputProps<string>) => {
   return (
     <TextField
+      {...(rest as any)}
       name={name}
       label={label}
       value={value}
-      type={type}
       fullWidth
       error={error}
       helperText={helperText}

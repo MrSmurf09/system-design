@@ -1,12 +1,11 @@
-.tablePaper {
+div.table_paper {
     width: 100%;
     border: 1px solid #eef2f6;
     border-radius: 12px;
     overflow: hidden;
-    background: #fff;
 }
 
-.tableHeader {
+div.table_paper div.table_header {
     padding: 16px;
     display: flex;
     justify-content: space-between;
@@ -14,10 +13,61 @@
     border-bottom: 1px solid #f1f4f9;
 }
 
-.searchField {
+.search_field {
     width: 250px;
 }
 
-.tableContainer {
+div.table_paper div.table_header div.tableContainer {
     max-height: 500px;
+}
+
+div.table_paper div.table_header div.tableContainer div.header_cell {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #f1f4f9;
+}
+
+button.sort_button {
+    margin-left: 4px;
+}
+
+button.sort_button_active {
+    color: var(--mui-palette-primary-main);
+}
+
+button.sort_button svg.sort_icon {
+    transition: transform 0.2s ease-in-out;
+}
+
+button.sort_button svg.sort_icon_desc {
+    transform: rotate(180deg);
+}
+
+.loading_cell {
+    padding: 16px;
+}
+
+tr.data_row:hover {
+    background-color: #f1f5f9;
+}
+
+.data_cell {
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    color: #1e293b;
+}
+
+.empty_box {
+    padding: 24px;
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    display: block;
 }

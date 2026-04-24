@@ -18,18 +18,16 @@ import {
   ListItemText,
   Tooltip,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { ReactNode } from "react";
-import type { SidebarProps, SidebarMenuItem } from "@bengali/shared-types";
+import style from "./sidebar.module.css";
 
-const DRAWER_WIDTH = 260;
+import type { SidebarProps, SidebarMenuItem } from "@bengali/shared-types";
+import type { ReactNode } from "react";
 
 export const Sidebar = ({ open, toggleDrawer }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
 
   const menuItems: SidebarMenuItem[] = [
     { label: "Dashboard", icon: () => <DashboardIcon />, path: "/" },
@@ -38,42 +36,17 @@ export const Sidebar = ({ open, toggleDrawer }: SidebarProps) => {
     { label: "Settings", icon: () => <SettingsIcon />, path: "/configuracion" },
   ];
 
-  const transitionStyle = theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  });
-
   return (
     <Drawer
       variant="permanent"
       open={open}
-      sx={{
-        width: open ? DRAWER_WIDTH : 70,
-        flexShrink: 0,
-        whiteSpace: "nowrap",
-        boxSizing: "border-box",
-        transition: transitionStyle,
-        "& .MuiDrawer-paper": {
-          width: open ? DRAWER_WIDTH : 70,
-          transition: transitionStyle,
-          overflowX: "hidden",
-          backgroundColor: "#1e1e2f",
-          color: "white",
-          borderRight: "none",
-        },
-      }}
+      className={`${style.drawer} ${open ? style.drawer_open : style.drawer_closed}`}
     >
       <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: open ? "space-between" : "center",
-          p: 2,
-          minHeight: 64,
-        }}
+        className={`${style.header} ${open ? style.header_open : style.header_closed}`}
       >
         {open && (
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#4caf50" }}>
+          <Typography variant="h6" className={style.brand_name}>
             FINANCIA
           </Typography>
         )}
@@ -82,7 +55,7 @@ export const Sidebar = ({ open, toggleDrawer }: SidebarProps) => {
         </IconButton>
       </Box>
 
-      <Divider sx={{ backgroundColor: "rgba(255,255,255,0.1)" }} />
+      <Divider className={style.divider} />
 
       <List sx={{ mt: 1 }}>
         {menuItems.map((item) => {
@@ -92,40 +65,23 @@ export const Sidebar = ({ open, toggleDrawer }: SidebarProps) => {
             <ListItem
               key={item.label}
               disablePadding
-              sx={{ display: "block", mb: 0.5 }}
+              className={style.list_item}
             >
               <Tooltip title={!open ? item.label : ""} placement="right">
                 <ListItemButton
                   onClick={() => navigate(item.path)}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                    mx: 1,
-                    borderRadius: "8px",
-                    backgroundColor: isActive
-                      ? "rgba(76, 175, 80, 0.2)"
-                      : "transparent",
-                    color: isActive ? "#4caf50" : "rgba(255,255,255,0.7)",
-                    "&:hover": { backgroundColor: "rgba(255,255,255,0.05)" },
-                  }}
+                  className={`${style.nav_button} ${isActive ? style.nav_button_active : ""}`}
+                  sx={{ justifyContent: open ? "initial" : "center" }}
                 >
                   <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 2 : "auto",
-                      justifyContent: "center",
-                      color: "inherit",
-                    }}
+                    className={`${style.icon} ${open ? style.icon_open : style.icon_closed}`}
                   >
                     {item.icon() as ReactNode}
                   </ListItemIcon>
                   <ListItemText
                     primary={item.label}
-                    sx={{
-                      opacity: open ? 1 : 0,
-                      transition: "opacity 0.2s",
-                    }}
+                    className={style.item_text}
+                    sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItemButton>
               </Tooltip>

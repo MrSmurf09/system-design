@@ -7,14 +7,14 @@ import {
   Typography,
 } from "@mui/material";
 import type { CreateOptionModalProps } from "@bengali/shared-types";
-
 import { useEffect, useState } from "react";
+import style from "./addoptionmodal.module.css";
 
 export const AddOptionModal = ({
   open,
   onClose,
   onSave,
-  initialValue,
+  initialValue = "",
   title = "Nuevo registro",
 }: CreateOptionModalProps) => {
   const [name, setName] = useState(initialValue);
@@ -24,33 +24,38 @@ export const AddOptionModal = ({
   }, [open, initialValue]);
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 350,
-          bgcolor: "background.paper",
-          p: 4,
-          borderRadius: 2,
-          boxShadow: 24,
-        }}
-      >
-        <Typography variant="h6">{title}</Typography>
+    <Modal
+      open={open}
+      onClose={onClose}
+      disableRestoreFocus
+      disableEnforceFocus
+    >
+      <Box className={style.modalContainer}>
+        <Typography variant="h6" className={style.title}>
+          {title}
+        </Typography>
         <TextField
           fullWidth
           label="Nombre"
           value={name}
           onChange={(e) => setName(e.target.value)}
           autoFocus
+          slotProps={{
+            input: {
+              autoComplete: "off",
+            },
+          }}
         />
-        <Stack direction={"row"} spacing={2}>
+
+        <Stack spacing={2} direction="row" className={style.buttonStack}>
           <Button onClick={onClose} color="inherit">
             Cancelar
           </Button>
-          <Button variant="contained" onClick={() => onSave(name)}>
+          <Button
+            variant="outlined"
+            onClick={() => onSave(name)}
+            disabled={!name.trim()}
+          >
             Guardar
           </Button>
         </Stack>

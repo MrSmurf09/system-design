@@ -1,0 +1,53 @@
+.form_container {
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.padding_container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.title_container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.grid_layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    align-items: center;
+}
+
+.footer_container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.skeleton_title {
+    margin: 0 auto;
+    width: 50%;
+    height: 50px;
+}
+
+.skeleton_input {
+    height: 56px;
+}
+
+.skeleton_button {
+    width: 120px;
+    height: 40px;
+}
+
+@media (max-width: 600px) {
+    .grid_layout {
+        grid-template-columns: 1fr;
+    }
+}

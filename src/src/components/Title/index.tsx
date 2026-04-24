@@ -1,5 +1,6 @@
 import { Skeleton, Typography } from "@mui/material";
 import type { TitleProps } from "@bengali/shared-types";
+import style from "./title.module.css";
 
 interface TitleComponentProps extends TitleProps {
   children?: React.ReactNode;
@@ -15,18 +16,23 @@ export const Title = ({
   const content = children ?? text;
 
   if (isLoading) {
+    const alignmentClass =
+      align === "center"
+        ? style.skeleton_center
+        : align === "right"
+          ? style.skeleton_right
+          : style.skeleton_left;
+
     return (
       <Skeleton
         variant="text"
-        width="60%"
-        height={40}
-        sx={{ mx: align === "center" ? "auto" : 0 }}
+        className={`${style.skeleton} ${alignmentClass}`}
       />
     );
   }
 
   return (
-    <Typography variant={variant} align={align}>
+    <Typography align={align} variant={variant}>
       {content}
     </Typography>
   );
