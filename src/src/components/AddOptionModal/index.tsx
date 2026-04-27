@@ -16,7 +16,8 @@ export const AddOptionModal = ({
   onSave,
   initialValue = "",
   title = "Nuevo registro",
-}: CreateOptionModalProps) => {
+  ...rest
+}: CreateOptionModalProps & { disablePortal?: boolean; container?: any }) => {
   const [name, setName] = useState(initialValue);
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export const AddOptionModal = ({
       onClose={onClose}
       disableRestoreFocus
       disableEnforceFocus
+      {...rest}
     >
       <Box className={style.modalContainer}>
         <Typography variant="h6" className={style.title}>
@@ -53,7 +55,10 @@ export const AddOptionModal = ({
           </Button>
           <Button
             variant="outlined"
-            onClick={() => onSave(name)}
+            onClick={() => {
+              onSave(name);
+              onClose();
+            }}
             disabled={!name.trim()}
           >
             Guardar

@@ -4,13 +4,14 @@ import type { ReactNode } from "react";
 import type { CustomModalProps, ModalSize } from "@bengali/shared-types";
 import styles from "./custommodal.module.css";
 
-type Props = CustomModalProps<ReactNode>;
+type Props = CustomModalProps<ReactNode> & Record<string, unknown>;
 
 const sizes: Record<ModalSize, number> = {
   sm: 300,
   md: 500,
   lg: 800,
 };
+
 export const CustomModal = ({
   open,
   onClose,
@@ -18,9 +19,16 @@ export const CustomModal = ({
   children,
   footer,
   size = "md",
+  ...rest
 }: Props) => {
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal
+      open={open}
+      onClose={onClose}
+      disableScrollLock
+      disableRestoreFocus
+      {...rest}
+    >
       <Box className={styles.modal_container} sx={{ width: sizes[size] }}>
         <Box className={styles.header}>
           {title && <h2 className={styles.title}>{title}</h2>}

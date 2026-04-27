@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import AddOptionModal from "./index";
-import { Box, GlobalStyles } from "@mui/material"; // Importamos GlobalStyles
+import { Box, GlobalStyles, Button } from "@mui/material";
 import { fn } from "storybook/test";
+import { useArgs } from "storybook/internal/preview-api";
 
 const meta: Meta<typeof AddOptionModal> = {
   title: "Components/AddOptionModal",
@@ -22,21 +23,23 @@ const meta: Meta<typeof AddOptionModal> = {
           border: "1px solid #e0e0e0",
           borderRadius: "4px",
           overflow: "hidden",
-          transform: "translateZ(0)",
         }}
       >
         <GlobalStyles
           styles={{
-            ".docs-story button": {
-              zIndex: "9999 !important",
-              position: "relative",
-            },
-            // Forzamos a la modal a no salirse de nuestro recuadro
-            ".MuiDialog-root, .MuiModal-root": {
+            // Ajustes para que la modal sea interna y no bloquee el "Show Code"
+            ".MuiModal-root": {
               position: "absolute !important",
+              pointerEvents: "none",
             },
             ".MuiBackdrop-root": {
               position: "absolute !important",
+              backgroundColor: "transparent !important", // Fondo transparente para poder clicar lo de atrás
+              pointerEvents: "none",
+            },
+            // Aseguramos que el contenido de la modal sí reciba clics
+            "#modal-viewport > div": {
+              pointerEvents: "auto",
             },
           }}
         />
@@ -44,22 +47,6 @@ const meta: Meta<typeof AddOptionModal> = {
       </Box>
     ),
   ],
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<AddOptionModal
-  open={true}
-  title="Nuevo cliente"
-  initialValue=""
-  onClose={() => {}}
-  onSave={(name) => console.log(name)}
-/>`,
-        language: "tsx",
-        type: "code",
-      },
-    },
-  },
 };
 
 export default meta;
@@ -73,25 +60,33 @@ export const Default: Story = {
     onClose: fn(),
     onSave: fn(),
   },
-  render: (args) => (
-    <AddOptionModal
-      {...args}
-      // @ts-ignore
-      disablePortal
-      // @ts-ignore
-      container={() => document.getElementById("modal-viewport")}
-      sx={{
-        position: "absolute",
-        zIndex: 1,
-      }}
-    />
-  ),
-};
+  render: function Render(args) {
+    const [{ open }, updateArgs] = useArgs<{ open: boolean }>();
 
-export const WithInitialValue: Story = {
-  ...Default,
-  args: {
-    ...Default.args,
-    initialValue: "Cliente sugerido",
+    const handleClose = () => {
+      updateArgs({ open: false });
+      args.onClose();
+    };
+
+    return (
+      <Box>
+        {!open && (
+          <Button
+            variant="contained"
+            onClick={() => updateArgs({ open: true })}
+          >
+            Abrir Modal
+          </Button>
+        )}
+
+        <AddOptionModal
+          {...args}
+          open={open}
+          onClose={handleClose}
+          disablePortal
+          container={() => document.getElementById("modal-viewport")}
+        />
+      </Box>
+    );
   },
 };
