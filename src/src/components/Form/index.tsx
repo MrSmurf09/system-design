@@ -89,14 +89,13 @@ export const Form: FC<PropsWithChildren<FormComponentProps>> = ({
             const values = Object.fromEntries(formData.entries());
             onSubmit(values as Record<string, string>);
           }}
-          className={styles.grid_layout}
         >
-          {formBodyChildren}
-        </Box>
+          <Box className={styles.grid_layout}>{formBodyChildren}</Box>
 
-        {footerChildren.length > 0 && (
-          <Box className={styles.footer_container}>{footerChildren}</Box>
-        )}
+          {footerChildren.length > 0 && (
+            <Box className={styles.footer_container}>{footerChildren}</Box>
+          )}
+        </Box>
       </Box>
     </Box>
   );

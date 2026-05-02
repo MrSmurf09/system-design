@@ -15,6 +15,7 @@ export const Input = ({
   return (
     <TextField
       {...(rest as any)}
+      type={type}
       name={name}
       label={label}
       value={value}
